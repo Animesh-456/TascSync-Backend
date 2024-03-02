@@ -9,7 +9,10 @@ const employeeSchema = mongoose.Schema({
         unique: true,
         type: String
     },
-    username: String,
+    username: {
+        unique: true,
+        type: String
+    },
     account_type: String,
     description: String,
     password: String
