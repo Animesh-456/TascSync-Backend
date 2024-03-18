@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const employee = req.body;
     await empcontroller.loginemployee(employee).then(user => {
-        console.log("route log", user.resp, user.usr)
+        //console.log("route log", user.resp, user.usr)
         res.status(201).json(user)
     }).catch(error => {
         console.log("route error", error)
@@ -53,7 +53,7 @@ router.get('/getempdetails', empauth, async (req, res) => {
 router.get('/searchusers', async(req, res)=>{
     console.log("The search body is",req.query?.q)
     await empcontroller.searchusers(req.query?.q).then(user=>{
-        console.log("search users", user)
+        //console.log("search users", user)
         res.status(200).json(user)
     }).catch(error=>{
         res.status(500).json(error)
@@ -62,7 +62,7 @@ router.get('/searchusers', async(req, res)=>{
 
 router.post('/postemployeedetails', async (req, res) => {
 
-    console.log("body to update", req.body)
+    //console.log("body to update", req.body)
     await empcontroller.updateemployeedetails(req.body).then(user => {
         res.status(201).json(user)
     }).catch(error => {
@@ -89,7 +89,7 @@ router.get("/plain", async (req, res) => {
 
     const isMatch = verifyPassword(plainTextPassword, hashedPasswordFromDatabase);
 
-    console.log("crypt veryfy is", isMatch);
+    //console.log("crypt veryfy is", isMatch);
     res.status(200).json(isMatch)
 })
 
