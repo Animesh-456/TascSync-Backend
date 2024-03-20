@@ -6,35 +6,87 @@ import Jwt from 'jsonwebtoken';
 import registerMail from '../helpers/globalmail/register-mail.js';
 import sendmail from '../helpers/mail.js';
 const addemployee = async (emp) => {
-    let newEmployee = null;
 
-    let user = await employee.findOne({
-        email: emp.email
-    })
+    // let newEmployee = null;
+
+    // let data = {
+    //     fname: emp.fname,
+    //     lname: emp.lname,
+    //     email: emp.email,
+    //     account_type: emp.account_type,
+    //     username: emp.username,
+    //     description: "",
+    //     password: ""
+    // }
+
+    // await bcrypt.hash(emp.password, 10).then(async function (hash) {
+    //     data.password = hash
+    //     newEmployee = new employee(data);
+    //     await newEmployee.save();
+    //     console.log(newEmployee)
+    //     let mail = await registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
+    //     const subject = mail.subject
+    //     const text = mail.body
+    //     //sendmail(newEmployee.email, subject, text)
+    // });
 
 
-    let data = {
-        fname: emp.fname,
-        lname: emp.lname,
-        email: emp.email,
-        account_type: emp.account_type,
-        username: emp.username,
-        description: "",
-        password: ""
-    }
-    await bcrypt.hash(emp.password, 10).then(async function (hash) {
-        data.password = hash
-        newEmployee = new employee(data);
+    //return newEmployee
+
+    try {
+
+
+        let userresults = await employee.findOne({
+            $or: [
+                { email: emp.email },
+                { username: emp.username }
+            ]
+        })
+
+        if (userresults) {
+            //console.log("user find results are: -", userresults)
+            return
+        }
+
+        let data = {
+            fname: emp.fname,
+            lname: emp.lname,
+            email: emp.email,
+            account_type: emp.account_type,
+            username: emp.username,
+            description: "",
+            password: ""
+        }
+
+        let hashsedpassword = await bcrypt.hash(emp.password, 10);
+
+        console.log("The hashed password is:-", hashsedpassword)
+
+
+        data.password = hashsedpassword;
+
+        console.log("The object is", data)
+
+
+        let newEmployee = new employee(data);
         await newEmployee.save();
-        console.log(newEmployee)
-        let mail = registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
+        console.log("newEmployee", newEmployee)
+
+
+
+
+        // Mail Functionality
+
+        let mail = await registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
         const subject = mail.subject
         const text = mail.body
-        sendmail(newEmployee.email, subject, text)
-    });
+        await sendmail(newEmployee.email, subject, text)
 
+        return newEmployee;
+    } catch (error) {
+        return error
+    }
 
-    return newEmployee
 }
 
 const loginemployee = async (emp) => {

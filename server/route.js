@@ -14,13 +14,25 @@ router.post('/register', async (req, res) => {
     const employee = req.body;
 
 
-    await empcontroller.addemployee(employee).then(user => {
+    try {
+        let user = await empcontroller.addemployee(employee);
+        if (user != undefined) {
+            console.log("returned results from controller:--", user)
+            return res.status(201).json(user)
+        }
+        return res.status(500).send("Invalid email/username");
 
-        res.status(201).json(user)
+    } catch (error) {
+        return res.status(500).json(error)
+    }
 
-    }).catch(error => {
-        res.status(500).json(error)
-    })
+    // await empcontroller.addemployee(employee).then(user => {
+
+    //     res.status(201).json(user)
+
+    // }).catch(error => {
+    //     res.status(500).json(error)
+    // })
 });
 
 router.post('/login', async (req, res) => {
@@ -50,12 +62,12 @@ router.get('/getempdetails', empauth, async (req, res) => {
     })
 })
 
-router.get('/searchusers', async(req, res)=>{
-    console.log("The search body is",req.query?.q)
-    await empcontroller.searchusers(req.query?.q).then(user=>{
+router.get('/searchusers', async (req, res) => {
+    console.log("The search body is", req.query?.q)
+    await empcontroller.searchusers(req.query?.q).then(user => {
         //console.log("search users", user)
         res.status(200).json(user)
-    }).catch(error=>{
+    }).catch(error => {
         res.status(500).json(error)
     })
 })
