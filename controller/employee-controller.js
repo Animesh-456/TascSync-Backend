@@ -128,23 +128,31 @@ const updateemployeedetails = async (emp) => {
 
 const searchusers = async (q) => {
 
-    if (q?.includes(" ")) {
-        let str = q?.split(" ");
-        let fname = str[0];
-        let lname = str[1];
-        let result = await employee.find({
-            account_type: "Employee",
-            fname: fname?.charAt(0).toUpperCase() + fname.slice(1),
-            lname: lname?.charAt(0).toUpperCase() + lname.slice(1),
-        })
-        return result
-    } else {
-        let result = await employee.find({
-            account_type: "Employee",
-            fname: q?.charAt(0).toUpperCase() + q.slice(1)
-        })
-        return result
-    }
+    // if (q?.includes(" ")) {
+    //     let str = q?.split(" ");
+    //     let fname = str[0];
+    //     let lname = str[1];
+    //     let result = await employee.find({
+    //         account_type: "Employee",
+    //         fname: fname?.charAt(0).toUpperCase() + fname.slice(1),
+    //         lname: lname?.charAt(0).toUpperCase() + lname.slice(1),
+    //     })
+    //     return result
+    // } else {
+    //     let result = await employee.find({
+    //         account_type: "Employee",
+    //         fname: q?.charAt(0).toUpperCase() + q.slice(1)
+    //     })
+    //     return result
+    // }
+
+    let result = await employee.find({
+        account_type: "Employee",
+        username: q
+    })
+
+    return result
+
 }
 
 const empcontroller = {
