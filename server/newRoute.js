@@ -1,0 +1,24 @@
+import empcontroller from '../controller/employee-controller.js';
+import taskcontroller from '../controller/task-controller.js';
+import express from 'express';
+import bodyParser from 'body-parser';
+import empauth from '../middleware/empauth.js'
+
+import crypto from 'crypto';
+import { error } from 'console';
+const router = express.Router();
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
+
+
+router.post('/register',  empcontroller.addemployee);
+
+router.post('/login', empcontroller.loginemployee);
+
+router.get('/getempdetails', empcontroller.getemployeedetails);
+
+router.get('/searchusers', empcontroller.searchusers);
+
+router.post('/postemployeedetails', empcontroller.updateemployeedetails);
+
+export default router;

@@ -14,8 +14,20 @@ router.post('/addtask', async (req, res) => {
     })
 })
 
-router.get('/viewtasks', empauth, async (req, res) => {
-    await taskcontroller.viewtask(req.query.id, req.query.status).then(result => {
+router.get('/viewtasks-pending', empauth, async (req, res) => {
+    await taskcontroller.viewtaskPending(req.query.id, req.query.status, req.query.pageNumber).then(result => {
+        //console.log("Task result us", result)
+        res.status(201).json(result)
+
+    }).catch(error => {
+        res.status(500).json(error)
+    })
+})
+
+
+
+router.get('/viewtasks-complete', empauth, async (req, res) => {
+    await taskcontroller.viewtaskComplete(req.query.id, req.query.status, req.query.pageNumber).then(result => {
         //console.log("Task result us", result)
         res.status(201).json(result)
 
@@ -80,6 +92,7 @@ router.get('/viewtaskbyid', empauth, async (req, res) => {
 })
 
 router.post('/updatetask', async (req, res) => {
+    console.log("body for update ", req?.body)
     await taskcontroller.updatetask(req.body).then(result => {
         //console.log(result)
         res.status(201).json(result)
@@ -101,7 +114,7 @@ router.post('/markdone', async (req, res) => {
 
 
 router.post('/deletetask', async (req, res) => {
-    await taskcontroller.deletetask(req.query.id).then(result => {
+    await taskcontroller.deletetask(req.body).then(result => {
         res.status(201).json(result)
     }).catch(error => {
         res.status(500).json(error)

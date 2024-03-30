@@ -5,162 +5,281 @@ import bcrypt from 'bcrypt'
 import Jwt from 'jsonwebtoken';
 import registerMail from '../helpers/globalmail/register-mail.js';
 import sendmail from '../helpers/mail.js';
-const addemployee = async (emp) => {
+// const addemployee = async (emp) => {
 
-    // let newEmployee = null;
+//     // let newEmployee = null;
 
-    // let data = {
-    //     fname: emp.fname,
-    //     lname: emp.lname,
-    //     email: emp.email,
-    //     account_type: emp.account_type,
-    //     username: emp.username,
-    //     description: "",
-    //     password: ""
-    // }
+//     // let data = {
+//     //     fname: emp.fname,
+//     //     lname: emp.lname,
+//     //     email: emp.email,
+//     //     account_type: emp.account_type,
+//     //     username: emp.username,
+//     //     description: "",
+//     //     password: ""
+//     // }
 
-    // await bcrypt.hash(emp.password, 10).then(async function (hash) {
-    //     data.password = hash
-    //     newEmployee = new employee(data);
-    //     await newEmployee.save();
-    //     console.log(newEmployee)
-    //     let mail = await registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
-    //     const subject = mail.subject
-    //     const text = mail.body
-    //     //sendmail(newEmployee.email, subject, text)
-    // });
-
-
-    //return newEmployee
-
-    try {
+//     // await bcrypt.hash(emp.password, 10).then(async function (hash) {
+//     //     data.password = hash
+//     //     newEmployee = new employee(data);
+//     //     await newEmployee.save();
+//     //     console.log(newEmployee)
+//     //     let mail = await registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
+//     //     const subject = mail.subject
+//     //     const text = mail.body
+//     //     //sendmail(newEmployee.email, subject, text)
+//     // });
 
 
-        let userresults = await employee.findOne({
-            $or: [
-                { email: emp.email },
-                { username: emp.username }
-            ]
-        })
+//     //return newEmployee
 
-        if (userresults) {
-            //console.log("user find results are: -", userresults)
-            return
-        }
-
-        let data = {
-            fname: emp.fname,
-            lname: emp.lname,
-            email: emp.email,
-            account_type: emp.account_type,
-            username: emp.username,
-            description: "",
-            password: ""
-        }
-
-        let hashsedpassword = await bcrypt.hash(emp.password, 10);
-
-        console.log("The hashed password is:-", hashsedpassword)
+//     try {
 
 
-        data.password = hashsedpassword;
+//         let userresults = await employee.findOne({
+//             $or: [
+//                 { email: emp.email },
+//                 { username: emp.username }
+//             ]
+//         })
 
-        console.log("The object is", data)
+//         if (userresults) {
+//             //console.log("user find results are: -", userresults)
+//             return
+//         }
+
+//         let data = {
+//             fname: emp.fname,
+//             lname: emp.lname,
+//             email: emp.email,
+//             account_type: emp.account_type,
+//             username: emp.username,
+//             description: "",
+//             password: ""
+//         }
+
+//         let hashsedpassword = await bcrypt.hash(emp.password, 10);
+
+//         console.log("The hashed password is:-", hashsedpassword)
 
 
-        let newEmployee = new employee(data);
-        await newEmployee.save();
-        console.log("newEmployee", newEmployee)
+//         data.password = hashsedpassword;
+
+//         console.log("The object is", data)
+
+
+//         let newEmployee = new employee(data);
+//         await newEmployee.save();
+//         console.log("newEmployee", newEmployee)
 
 
 
 
-        // Mail Functionality
+//         // Mail Functionality
 
-        let mail = await registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
-        const subject = mail.subject
-        const text = mail.body
-        await sendmail(newEmployee.email, subject, text)
+//         let mail = await registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
+//         const subject = mail.subject
+//         const text = mail.body
+//         await sendmail(newEmployee.email, subject, text)
 
-        return newEmployee;
-    } catch (error) {
-        return error
-    }
+//         return newEmployee;
+//     } catch (error) {
+//         return error
+//     }
 
-}
+// }
 
-const loginemployee = async (emp) => {
-    let token;
-    let resp = false
-    let data = {
-        email: emp.email,
-        password: emp.password
-    }
+// const loginemployee = async (emp) => {
+//     let token;
+//     let resp = false
+//     let data = {
+//         email: emp.email,
+//         password: emp.password
+//     }
 
-    console.log(data)
-    const usr = await employee.findOne({ email: data.email })
-    if (usr) {
-        resp = await bcrypt.compare(data.password, usr.password)
-        if (resp == true) {
-            token = await Jwt.sign(usr?.id, process.env.SECRET)
-            console.log("JSONWEBTOKEN", token)
-        }
-    }
+//     console.log(data)
+//     const usr = await employee.findOne({ email: data.email })
+//     if (usr) {
+//         resp = await bcrypt.compare(data.password, usr.password)
+//         if (resp == true) {
+//             token = await Jwt.sign(usr?.id, process.env.SECRET)
+//             console.log("JSONWEBTOKEN", token)
+//         }
+//     }
 
-    return { resp, usr, token }
-}
+//     return { resp, usr, token }
+// }
 
-const getemployeedetails = async (emp) => {
-    const user = await employee.findOne({ email: emp.email })
-    return user
-}
+// const getemployeedetails = async (emp) => {
+//     const user = await employee.findOne({ email: emp.email })
+//     return user
+// }
 
-const updateemployeedetails = async (emp) => {
+// const updateemployeedetails = async (emp) => {
 
-    let obj = {
-        fname: emp.fname,
-        lname: emp.lname,
-        description: emp.description
-    }
-    let result = await employee.updateOne({ email: emp.email }, { $set: obj })
-    return result
-}
+//     let obj = {
+//         fname: emp.fname,
+//         lname: emp.lname,
+//         description: emp.description
+//     }
+//     let result = await employee.updateOne({ email: emp.email }, { $set: obj })
+//     return result
+// }
 
-const searchusers = async (q) => {
+// const searchusers = async (q) => {
 
-    // if (q?.includes(" ")) {
-    //     let str = q?.split(" ");
-    //     let fname = str[0];
-    //     let lname = str[1];
-    //     let result = await employee.find({
-    //         account_type: "Employee",
-    //         fname: fname?.charAt(0).toUpperCase() + fname.slice(1),
-    //         lname: lname?.charAt(0).toUpperCase() + lname.slice(1),
-    //     })
-    //     return result
-    // } else {
-    //     let result = await employee.find({
-    //         account_type: "Employee",
-    //         fname: q?.charAt(0).toUpperCase() + q.slice(1)
-    //     })
-    //     return result
-    // }
+//     // if (q?.includes(" ")) {
+//     //     let str = q?.split(" ");
+//     //     let fname = str[0];
+//     //     let lname = str[1];
+//     //     let result = await employee.find({
+//     //         account_type: "Employee",
+//     //         fname: fname?.charAt(0).toUpperCase() + fname.slice(1),
+//     //         lname: lname?.charAt(0).toUpperCase() + lname.slice(1),
+//     //     })
+//     //     return result
+//     // } else {
+//     //     let result = await employee.find({
+//     //         account_type: "Employee",
+//     //         fname: q?.charAt(0).toUpperCase() + q.slice(1)
+//     //     })
+//     //     return result
+//     // }
 
-    let result = await employee.find({
-        account_type: "Employee",
-        username: q
-    })
+//     let result = await employee.find({
+//         account_type: "Employee",
+//         username: q
+//     })
 
-    return result
+//     return result
 
-}
+// }
+
+
+
+// Clean alternative
 
 const empcontroller = {
-    addemployee,
-    loginemployee,
-    getemployeedetails,
-    updateemployeedetails,
-    searchusers
+    addemployee: async (req, res) => {
+        const emp = req.body;
+        try {
+
+
+            let userresults = await employee.findOne({
+                $or: [
+                    { email: emp.email },
+                    { username: emp.username }
+                ]
+            })
+
+            if (userresults) {
+                //console.log("user find results are: -", userresults)
+                return
+            }
+
+            let data = {
+                fname: emp.fname,
+                lname: emp.lname,
+                email: emp.email,
+                account_type: emp.account_type,
+                username: emp.username,
+                description: "",
+                password: ""
+            }
+
+            let hashsedpassword = await bcrypt.hash(emp.password, 10);
+
+            console.log("The hashed password is:-", hashsedpassword)
+
+
+            data.password = hashsedpassword;
+
+            console.log("The object is", data)
+
+
+            let newEmployee = new employee(data);
+            await newEmployee.save();
+            console.log("newEmployee", newEmployee)
+
+
+
+
+            // Mail Functionality
+
+            let mail = await registerMail(newEmployee.fname, newEmployee._id, newEmployee.lname, newEmployee.account_type, newEmployee.username)
+            const subject = mail.subject
+            const text = mail.body
+            await sendmail(newEmployee.email, subject, text)
+
+            //return newEmployee;
+
+            return res.status(201).json({ data: newEmployee, message: 'Employee Added !' });
+        } catch (error) {
+            return res.status(500).json(error)
+        }
+    },
+    loginemployee: async (req, res) => {
+        const emp = req.body;
+        try {
+            let token;
+            let resp = false
+            let data = {
+                email: emp.email,
+                password: emp.password
+            }
+
+            console.log(data)
+            const usr = await employee.findOne({ email: data.email })
+            if (usr) {
+                resp = await bcrypt.compare(data.password, usr.password)
+                if (resp == true) {
+                    token = await Jwt.sign(usr?.id, process.env.SECRET)
+                    console.log("JSONWEBTOKEN", token)
+                }
+            }
+
+            //return { resp, usr, token }
+            return res.status(201).json({ resp: resp, usr: usr, token: token, message: 'Login successful !' });
+        } catch (error) {
+            return res.status(500).json(error)
+        }
+    },
+    getemployeedetails: async (req, res) => {
+        let emp = req.query;
+        try {
+            const user = await employee.findOne({ email: emp.email })
+            return res.status(201).json({ data: user, message: 'Fetched successfullt !' });
+        } catch (error) {
+            return res.status(500).json(error)
+        }
+    },
+    updateemployeedetails: async (req, res) => {
+        const emp = req.body
+        try {
+            let obj = {
+                fname: emp.fname,
+                lname: emp.lname,
+                description: emp.description
+            }
+            let result = await employee.updateOne({ email: emp.email }, { $set: obj })
+            //return result
+            return res.status(201).json({ data: result, message: 'Updates successfully !' });
+        } catch (error) {
+
+        }
+    },
+    searchusers: async (req, res) => {
+        const q = req.query?.q
+        try {
+            let result = await employee.find({
+                account_type: "Employee",
+                username: q
+            })
+            return res.status(201).json({ data: result, message: 'Fetched successfully !' });
+        } catch (error) {
+            return res.status(500).json(error)
+        }
+    }
 }
 
 export default empcontroller
