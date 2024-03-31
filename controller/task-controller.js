@@ -536,7 +536,7 @@ const taskcontroller = {
 
       return res.status(201).json({ tks: tks, TotalPages: TotalPages, message: 'Task fetched!' });
     } catch (error) {
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(401).json({ error: 'Internal server error' });
     }
   },
 

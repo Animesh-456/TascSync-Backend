@@ -163,8 +163,6 @@ const empcontroller = {
     addemployee: async (req, res) => {
         const emp = req.body;
         try {
-
-
             let userresults = await employee.findOne({
                 $or: [
                     { email: emp.email },
@@ -173,8 +171,7 @@ const empcontroller = {
             })
 
             if (userresults) {
-                //console.log("user find results are: -", userresults)
-                return
+                return res.status(500).json({message: "Email/username already exists"})
             }
 
             let data = {
@@ -213,7 +210,7 @@ const empcontroller = {
 
             //return newEmployee;
 
-            return res.status(201).json({ data: newEmployee, message: 'Employee Added !' });
+            return res.status(201).json({ newEmployee: newEmployee, message: 'Employee Added !' });
         } catch (error) {
             return res.status(500).json(error)
         }
@@ -235,11 +232,14 @@ const empcontroller = {
                 if (resp == true) {
                     token = await Jwt.sign(usr?.id, process.env.SECRET)
                     console.log("JSONWEBTOKEN", token)
+                    return res.status(201).json({ resp: resp, usr: usr, token: token, message: 'Login successful !' });
+                } else {
+
+                    return res.status(500).json({ message: "Invalid Email/password !" })
                 }
             }
-
             //return { resp, usr, token }
-            return res.status(201).json({ resp: resp, usr: usr, token: token, message: 'Login successful !' });
+
         } catch (error) {
             return res.status(500).json(error)
         }
@@ -265,7 +265,7 @@ const empcontroller = {
             //return result
             return res.status(201).json({ data: result, message: 'Updates successfully !' });
         } catch (error) {
-
+            return res.status(500).json(error)
         }
     },
     searchusers: async (req, res) => {
