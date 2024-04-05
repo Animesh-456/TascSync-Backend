@@ -225,8 +225,8 @@ const empcontroller = {
                 password: emp.password
             }
 
-            console.log(data)
             const usr = await employee.findOne({ email: data.email })
+            
             if (usr) {
                 resp = await bcrypt.compare(data.password, usr.password)
                 if (resp == true) {
@@ -234,9 +234,10 @@ const empcontroller = {
                     console.log("JSONWEBTOKEN", token)
                     return res.status(201).json({ resp: resp, usr: usr, token: token, message: 'Login successful !' });
                 } else {
-
                     return res.status(500).json({ message: "Invalid Email/password !" })
                 }
+            }else{
+                return res.status(400).json({ message: "Invalid Email/password !" })
             }
             //return { resp, usr, token }
 

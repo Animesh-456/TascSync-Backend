@@ -27,6 +27,11 @@ const taskSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    files: [
+        {
+            type: String, // Assuming you're storing file paths or URLs as strings
+        }
+    ],
 });
 
 const task = new mongoose.model("task", taskSchema)

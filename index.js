@@ -9,7 +9,21 @@ import newRoute from "./server/newRoute.js"
 import TaskRoutes from "./server/taskRoutes.js"
 import newTaskroutes from './server/newTaskRoutes.js'
 import cors from 'cors';
+
+//import path from "path";
+
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
 const app = express();
+import path from 'path';
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 dotenv.config();
 Connection();
 

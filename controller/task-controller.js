@@ -5,7 +5,7 @@ import updateTask from '../helpers/globalmail/update-task.js';
 import assignTask from '../helpers/globalmail/asssign-task.js'
 import markDone from '../helpers/globalmail/mark-done.js';
 import { isObjectIdOrHexString } from 'mongoose';
-
+   
 // const addtask = async (tk) => {
 //   let data = {
 //     title: tk.title,
@@ -450,11 +450,15 @@ const taskcontroller = {
 
   addtask: async (req, res) => {
     const tk = req.body;
+
+    const fileNames = req.files.map(file => file.filename);
+    
     try {
       let data = {
         title: tk.title,
         description: tk.description,
         assignedBy: tk.assignedBy,
+        files: fileNames
       }
       let create = new task(data);
       await create.save();
