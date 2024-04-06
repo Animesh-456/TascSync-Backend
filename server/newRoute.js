@@ -15,6 +15,10 @@ router.post('/register',  empcontroller.addemployee);
 
 router.post('/login', empcontroller.loginemployee);
 
+router.post('/send-reset-password-link', empcontroller.sendpasswordresetlink);
+
+router.post('/reset-password', empcontroller.resetaccountpassword)
+
 router.get('/getempdetails', empcontroller.getemployeedetails);
 
 router.get('/searchusers', empcontroller.searchusers);

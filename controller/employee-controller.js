@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import Jwt from 'jsonwebtoken';
 import registerMail from '../helpers/globalmail/register-mail.js';
 import sendmail from '../helpers/mail.js';
+import resetpassword from '../helpers/globalmail/reset-password.js';
 // const addemployee = async (emp) => {
 
 //     // let newEmployee = null;
@@ -171,7 +172,7 @@ const empcontroller = {
             })
 
             if (userresults) {
-                return res.status(500).json({message: "Email/username already exists"})
+                return res.status(500).json({ message: "Email/username already exists" })
             }
 
             let data = {
@@ -226,7 +227,7 @@ const empcontroller = {
             }
 
             const usr = await employee.findOne({ email: data.email })
-            
+
             if (usr) {
                 resp = await bcrypt.compare(data.password, usr.password)
                 if (resp == true) {
@@ -236,7 +237,7 @@ const empcontroller = {
                 } else {
                     return res.status(500).json({ message: "Invalid Email/password !" })
                 }
-            }else{
+            } else {
                 return res.status(400).json({ message: "Invalid Email/password !" })
             }
             //return { resp, usr, token }
@@ -279,6 +280,58 @@ const empcontroller = {
             return res.status(201).json({ data: result, message: 'Fetched successfully !' });
         } catch (error) {
             return res.status(500).json(error)
+        }
+    },
+
+
+    sendpasswordresetlink: async (req, res) => {
+        const email = req.body.email;
+        try {
+            const user = await employee.findOne({ email: email })
+            if (user == null) {
+                return res.status(400).json({ message: "No user found !" })
+            } else {
+                const secret = user?._id + process.env.SECRET
+                const token = await Jwt.sign({ userId: user?._id }, secret, { expiresIn: "60s" })
+                console.log(token)
+                const link = `${process.env.frontendLink}/resetpassword?email=${user?.email}?token=${token}`
+                let mail = await resetpassword(link)
+                const subject = mail.subject
+                const text = mail.body
+                await sendmail(user.email, subject, text)
+                return res.status(201).json({ message: 'Mail sent' });
+            }
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json(error)
+        }
+    },
+
+
+    resetaccountpassword: async (req, res) => {
+        const body = req.body;
+        try {
+            const user = await employee.findOne({ email: body.email })
+            if (user == null) {
+                return res.status(500).json(error)
+            } else {
+                const secret = user?._id + process.env.SECRET
+                let response = await Jwt.verify(body.token, secret)
+                console.log(response)
+
+                let tokenuser = await employee.findOne({ _id: response.userId })
+                if (tokenuser != null) {
+                    const hash = await bcrypt.hash(body.password, 10)
+                    let result = await employee.updateOne({ email: tokenuser.email }, { $set: { password: hash } })
+                    return res.status(200).json({ data: result, message: "password updated !" })
+                } else {
+                    return res.status(500).json({ message: "Token expired !" })
+                }
+
+            }
+        } catch (error) {
+            return res.status(500).json({ error: error.message })
         }
     }
 }
