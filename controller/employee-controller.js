@@ -218,6 +218,7 @@ const empcontroller = {
     },
     loginemployee: async (req, res) => {
         const emp = req.body;
+        
         try {
             let token;
             let resp = false
@@ -227,17 +228,23 @@ const empcontroller = {
             }
 
             const usr = await employee.findOne({ email: data.email })
+            
 
             if (usr) {
+                
                 resp = await bcrypt.compare(data.password, usr.password)
                 if (resp == true) {
+                    
                     token = await Jwt.sign(usr?.id, process.env.SECRET)
                     console.log("JSONWEBTOKEN", token)
                     return res.status(201).json({ resp: resp, usr: usr, token: token, message: 'Login successful !' });
                 } else {
+                    console.log("not called")
+                    
                     return res.status(500).json({ message: "Invalid Email/password !" })
                 }
             } else {
+                
                 return res.status(400).json({ message: "Invalid Email/password !" })
             }
             //return { resp, usr, token }
