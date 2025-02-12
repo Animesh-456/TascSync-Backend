@@ -23,7 +23,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 dotenv.config();
 Connection();
 
-app.use(cors());
+app.use(cors({
+    origin: '*', 
+    //credentials: true
+}));
 app.use("/", newRoute)
 // app.use('/task', TaskRoutes)
 app.use('/task', newTaskroutes)
