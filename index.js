@@ -24,8 +24,9 @@ dotenv.config();
 Connection();
 
 app.use(cors({
-    origin: '*', 
-    //credentials: true
+    origin: '*',
+    methods: 'GET, POST, OPTIONS, PUT, DELETE',
+    allowedHeaders: 'Origin, Content-Type, Authorization, Accept'
 }));
 app.use("/", newRoute)
 // app.use('/task', TaskRoutes)
