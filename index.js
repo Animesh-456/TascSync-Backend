@@ -23,11 +23,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 dotenv.config();
 Connection();
 
-app.use(cors({
-    origin: '*',
-    methods: 'GET, POST, OPTIONS, PUT, DELETE',
-    allowedHeaders: 'Origin, Content-Type, Authorization, Accept'
-}));
+app.options('*', cors()); // Enable preflight across all routes
+
 app.use("/", newRoute)
 // app.use('/task', TaskRoutes)
 app.use('/task', newTaskroutes)
