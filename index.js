@@ -23,7 +23,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 dotenv.config();
 Connection();
 
-app.options('*', cors()); // Enable preflight across all routes
+app.use(cors({
+    origin: '*',  // Or specify your domain: 'https://TaskSync.20.197.23.82.nip.io'
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Origin', 'Content-Type', 'Authorization', 'Accept'],
+    credentials: true
+  }));
+  
+  app.options('*', cors()); // Handle preflight requests
 
 app.use("/", newRoute)
 // app.use('/task', TaskRoutes)
