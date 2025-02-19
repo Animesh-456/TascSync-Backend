@@ -27,4 +27,3 @@ jobs:
           source ~/.nvm/nvm.sh
           cd /home/azureuser/sites/TascSync-Backend # Change this to your backend directory
           npm install
-          /home/azureuser/.nvm/versions/node/v18.20.6/bin/pm2 pm2 restart all
